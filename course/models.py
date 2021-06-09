@@ -8,8 +8,8 @@ from django.db.models.expressions import F
 
 class Branch(models.Model):
     class Meta:
-        verbose_name = 'branch'
-        verbose_name_plural = 'branches' 
+        verbose_name = 'филиал'
+        verbose_name_plural = 'филиалы' 
 
     name = models.CharField(max_length=100, null=False)
     address = models.CharField(max_length=300, null=True)
@@ -47,6 +47,7 @@ class Student(models.Model):
     adaress = models.CharField(max_length=300, null=True, blank=True)
     phone_number =models.CharField(max_length=20, null= False)
     gander = models.CharField(choices=GENDER_CHOICES, max_length=6, default=MALE)
+    Group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name  
