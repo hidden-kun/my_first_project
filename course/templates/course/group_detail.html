@@ -1,0 +1,29 @@
+{% extends 'course/base.html' %}
+{% block content %}
+    <h1> {{ group.name }}</h1>
+    <p>Филиал: <strong>{{ group.branch }} </strong></p>
+
+    <p>dobavil: {{ group.creator }}</p>
+
+    <p>Студенты группы: </p>
+
+    <ul>
+        {% for s in students %}
+        <li>{{ s.name }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if group.photo %}
+    <img src="{{ group.photo.url }}" width="300" height="300"/>
+
+    {% endif%}
+    <br>
+    {% if user.is_authenticated  %}
+    
+    <a href="{% url 'group_edit' group.id %}" class='btn btn-primary'>izmenit</a>
+    
+    {% endif %}
+    </br>
+    
+
+{% endblock %}

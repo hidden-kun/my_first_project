@@ -1,0 +1,1 @@
+default_add_config = 'course.app.CourseConfig'

@@ -1,0 +1,35 @@
+{% extends 'course/base.html' %}
+{% block content %}
+    <h1>{{student.name}}</h1>
+
+    <p> Адрес: <strong> {{student.adaress}} </strong> </p>
+    <p> Пол: <strong> {{student.gander}} </strong> </p>
+    <p>Дата рождения: <strong> {{student.date_of_birth}} </strong> </p>
+    <p>dobavil: {{ student.creator }}</p>
+    <p>Группа :<strong> {{student.Group}} </strong> </p>
+    <p>Курсы: </p>
+
+    <ul>
+       
+        {%for student in courses %}
+        <li>{{ student.name }}</li>
+        {% endfor%}
+   
+        
+    </ul>
+    
+    
+    {% if student.photo %}
+    <img src="{{ student.photo.url }}" width="300" height="300"/>
+
+    {% endif%}
+    
+    {% if user.is_authenticated  %}
+    <p>
+    <a href="{% url 'student_edit' student.id %}" class='btn btn-primary'>izmenit</a>
+    </p>
+    {% endif %}
+
+    
+
+{% endblock %}

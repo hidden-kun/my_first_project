@@ -1,6 +1,7 @@
 from django.db import models
-from django.db.models.base import ModelStateFieldsCacheDescriptor
-from django.db.models.expressions import F
+from django.db.models.base import Model
+from django.urls import reverse
+from django.conf import settings
 
 # Create your models here.
 
@@ -13,9 +14,15 @@ class Branch(models.Model):
 
     name = models.CharField(max_length=100, null=False)
     address = models.CharField(max_length=300, null=True)
+    photo = models.ImageField(upload_to='branches/', null=True, blank=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.PROTECT, null=True, related_name='branches')
+    manger = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse ("branch_detail", kwargs={"branch_id": self.pk})
 
 
 class Group(models.Model):
@@ -24,10 +31,28 @@ class Group(models.Model):
         verbose_name_plural = 'groups'
     name = models.CharField(max_length=100, null=False)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to='groups/', null=True, blank=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.PROTECT, null=True)
+    course = models.ForeignKey('course.Course', on_delete=models.PROTECT, null=True)
+
 
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse ("group_detail", kwargs={"group_id": self.pk})
+
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = 'курс'
+        verbose_name_plural = 'курсы'
+
+    def __str__(self): 
+        return self.name
+
 
 class Student(models.Model):
 
@@ -49,5 +74,17 @@ class Student(models.Model):
     gander = models.CharField(choices=GENDER_CHOICES, max_length=6, default=MALE)
     Group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
+    photo = models.ImageField(upload_to='students/', null=True, blank=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.PROTECT, null=True)
+
+    course = models.ManyToManyField(Course)
+    age= models.PositiveBigIntegerField(null=True)
+    
+
+
+
     def __str__(self):
-        return self.name  
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse ("student_detail", kwargs={"student_id": self.pk})
